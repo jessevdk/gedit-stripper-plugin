@@ -80,14 +80,40 @@ class DocumentHelper:
                 return
 
             end = piter.copy()
+            end.forward_to_line_end()
+
+            extraindent = 0
+
+            while not end.starts_line():
+                if not end.backward_char():
+                    break
+
+                if end.get_char() == ')':
+                    break
+
+                if end.get_char() == '(':
+                    start = end.copy()
+                    start.set_line_offset(0)
+
+                    extraindent = len(start.get_text(end).lstrip()) + 1
+
+            end = piter.copy()
+            stripit = True
 
             while not end.ends_line():
                 if not end.get_char().isspace():
-                    return
+                    stripit = False
+                    break
 
                 if not end.forward_char():
-                    return
+                    stripit = False
+                    break
 
-            self._buffer.delete(piter, end)
+            if stripit:
+                self._buffer.delete(piter, end)
+
+            if extraindent > 0:
+                piter = self._buffer.get_iter_at_mark(self._buffer.get_insert())
+                self._buffer.insert(piter, ' ' * extraindent)
 
 # ex:ts=4:et:
