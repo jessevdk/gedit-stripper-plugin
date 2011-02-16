@@ -2,5 +2,5 @@ A very simple plugin that removes spaces from a line which consists of only
 spaces, when pressing Enter.
 
 Install:
-	* mkdir -p $HOME/.gnome2/gedit/plugins
-	* cp -r stripper stripper.gedit-plugin $HOME/.gnome2/gedit/plugins/
+	* mkdir -p $HOME/.local/share/gedit/plugins
+	* cp -r stripper stripper.plugin $HOME/.local/share/gedit/plugins/
