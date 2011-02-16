@@ -26,10 +26,16 @@ class DocumentHelper:
     def __init__(self, view):
         self._view = view
         self._buffer = view.get_buffer()
+        self._completion = view.get_completion()
+        self._no_text = True
 
         self._view_signals = [
             self._view.connect('notify::buffer', self.on_notify_buffer),
             self._view.connect('event-after', self.on_key_press_event)
+        ]
+        
+        self._completion_signals = [
+            self._completion.connect('activate-proposal', self.on_activate_proposal)
         ]
 
         self._connect_buffer()
@@ -53,12 +59,18 @@ class DocumentHelper:
         self._disconnect(self._view, self._view_signals)
         self._view_signals = []
 
+    def _disconnect_completion(self):
+        self._disconnect(self._completion, self._completion_signals)
+        self._completion_signals = []
+
     def deactivate(self):
         self._disconnect_buffer()
+        self._disconnect_completion()
         self._disconnect_view()
 
         self._buffer = None
         self._view = None
+        self._completion = None
 
     def on_notify_buffer(self, view, gspec):
         self._disconnect_buffer()
@@ -68,6 +80,10 @@ class DocumentHelper:
 
     def on_key_press_event(self, view, event):
         if event.type != gtk.gdk.KEY_PRESS:
+            return
+
+        if not self._no_text:
+            self._no_text = True
             return
 
         state = event.state
@@ -115,5 +131,8 @@ class DocumentHelper:
             if extraindent > 0:
                 piter = self._buffer.get_iter_at_mark(self._buffer.get_insert())
                 self._buffer.insert(piter, ' ' * extraindent)
+
+    def on_activate_proposal(self, completion):
+        self._no_text = False
 
 # ex:ts=4:et:
