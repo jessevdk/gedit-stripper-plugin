@@ -1,4 +1,4 @@
-[Plugin]
+[Gedit Plugin]
 Loader=python
 Module=stripper
 IAge=3

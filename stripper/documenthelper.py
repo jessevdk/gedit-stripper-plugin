@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 
 #  phpcompletion.py - PHP completion using the completion framework
-#
+#  
 #  Copyright (C) 2009 - Jesse van den Kieboom
 #  Copyright (C) 2009 - Ignacio Casal Quinteiro
-#
+#  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
 #  (at your option) any later version.
-#
+#   
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#
+#   
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330,
 #  Boston, MA 02111-1307, USA.
 
-from gi.repository import Gtk, Gdk
+import gtk
 
 class DocumentHelper:
     def __init__(self, view):
@@ -67,14 +67,13 @@ class DocumentHelper:
         self._connect_buffer()
 
     def on_key_press_event(self, view, event):
-        if event.type != Gdk.EventType.KEY_PRESS:
+        if event.type != gtk.gdk.KEY_PRESS:
             return
 
         state = event.state
         key = event.keyval
 
-        if (key == Gdk.KEY_Return or key == Gdk.KEY_KP_Enter) and \
-            not (state & Gdk.ModifierType.SHIFT_MASK):
+        if (key == gtk.keysyms.Return or key == gtk.keysyms.KP_Enter) and not (state & gtk.gdk.SHIFT_MASK):
             piter = self._buffer.get_iter_at_mark(self._buffer.get_insert())
 
             if not piter.backward_line():
