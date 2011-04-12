@@ -108,18 +108,30 @@ class StripperPlugin(GObject.Object, Gedit.ViewActivatable):
 
             extraindent = 0
 
+            endings = {']': '[', ')': '('}
+            starts = ('[', '(')
+            ignore = []
+
             while not end.starts_line():
                 if not end.backward_char():
                     break
 
-                if end.get_char() == ')':
-                    break
+                ch = end.get_char()
 
-                if end.get_char() == '(':
+                if ch in endings:
+                    ignore.append(endings[ch])
+                    continue
+
+                if ch in starts:
+                    if ch in ignore:
+                        ignore.remove(ch)
+                        continue
+
                     start = end.copy()
                     start.set_line_offset(0)
 
                     extraindent = len(start.get_text(end).lstrip()) + 1
+                    break
 
             end = piter.copy()
             stripit = True
