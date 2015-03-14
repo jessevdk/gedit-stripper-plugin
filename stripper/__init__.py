@@ -25,7 +25,7 @@ from gi.repository import GObject, Gdk, Gtk, Gedit
 class StripperPlugin(GObject.Object, Gedit.ViewActivatable):
     __gtype_name__ = "StripperPlugin"
 
-    view = GObject.property(type=Gedit.View)
+    view = GObject.Property(type=Gedit.View)
 
     def __init__(self):
         GObject.Object.__init__(self)
